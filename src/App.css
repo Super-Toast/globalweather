@@ -50,15 +50,9 @@ img {
 
 .Info {
   text-align: center;
-  margin: .75em 0;
   color: #949494;
   border-radius: 1em;
-  padding: .5em;
   background-color: #fff;
-}
-
-.Info__Cards,
-.Info__Search {
   margin: 1em 0;
   line-height: 1.45em;
   padding: .5em 1em;
@@ -66,6 +60,8 @@ img {
 
 .Info__Loading {
   font-size: 1.5em;
+  margin-top: .75em;
+  margin-bottom: 0;
 }
 
 .WeatherCards__Title {
