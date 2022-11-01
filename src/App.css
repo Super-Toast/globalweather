@@ -67,6 +67,7 @@ img {
 .WeatherCards__Title {
   text-align: left;
   margin-top: 1.5em;
+  display: inline-block;
 }
 
 
@@ -109,10 +110,31 @@ img {
 
 .Btn__Save,
 .Btn__Delete {
-  margin-top: .5em;
   margin-left: auto;
   margin-right: auto;
   display: block;
+}
+
+.Btn__Save {
+  margin-top: .5em;
+}
+
+.Btn__Delete {
+  margin-top: 0;
+  background-color: #ff5e5e;
+}
+
+.Btn__Delete:hover,
+.Btn__Delete:focus {
+  background-color: #db4444;
+}
+
+.Btn__Delete__AllCards {
+  display: block;
+  margin: 0;
+  margin-left: auto;
+  width: fit-content;
+  margin-top: -1.5em;
 }
 
 
@@ -275,7 +297,20 @@ img {
 }
 
 .WeatherCard__Container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
+  background-color: #fff;
+  border-radius: 1em;
+  margin-top: 1em;
+  padding-bottom: .5em;
+}
+
+.WeatherCard__Container .Weather__Today__Container,
+.WeatherCard__Container .Weather__Days__Container {
+  margin: 0;
 }
 
 .WeatherCards__Container {
@@ -290,6 +325,10 @@ img {
 /* Media queries */
 
 @media (min-width: 400px) {
+
+  .Btn__Delete__AllCards {
+    width: 200px;
+  }
 
   .Weather__Today__Container {
     grid-template-columns: repeat(3, 1fr);
@@ -336,15 +375,16 @@ img {
   }
 
   .Search__Container__Input {
-    margin-right: 1em;
-  }
-
-  .Btn__Search {
-    width: 250px;
+    margin-right: .75em;
   }
 
   .Btn {
     max-width: 300px;
+  }
+
+  .Btn__Search,
+  .Btn__Delete__AllCards {
+    width: 250px;
   }
 
   .Info__Cards {
@@ -435,6 +475,10 @@ img {
 
   .Btn__Delete {
     grid-area: btn-delete;
+  }
+
+  .Btn__Delete__AllCards {
+    width: 100%;
   }
 
   .Searched__Location__Container,

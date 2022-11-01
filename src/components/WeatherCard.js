@@ -41,6 +41,8 @@ function WeatherCard(props) {
                 ) :
                 <p className="Info Info__Loading">Loading...</p>
             }
+
+            <button className="Btn Btn__Delete" onClick={() => {props.deleteCard(props.location)}}>Delete card</button>
         </div>
     )
 }

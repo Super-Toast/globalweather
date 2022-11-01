@@ -13,19 +13,19 @@ function App() {
   const [savedLocations, setSavedLocations] = useState(
     JSON.parse(localStorage.getItem("locations")) ?
     JSON.parse(localStorage.getItem("locations")) : 
-    [])
+    []
+  )
   const [weatherCardsData, setWeatherCardsData] = useState(
     savedLocations.length > 0 ?
-      savedLocations.map(location => <WeatherCard key={nanoid()} location={location} />) :
+      savedLocations.map(location => <WeatherCard key={nanoid()} location={location} deleteCard={deleteCard}/>) :
       <p className='Info Info__Cards'>You don't have any saved cards. To save a card, search for a city, then press "Save location to cards"</p>
   )
   const [isVisible, setIsVisible] = useState(false)
-
-  const [location, setLocation] = useState("")
+  const [myLocation, setMyLocation] = useState("")
 
   function position(pos) {
     const locationCoords = `${pos.coords.latitude},${pos.coords.longitude}`
-    setLocation(locationCoords)
+    setMyLocation(locationCoords)
 
     fetch(`https://weatherdbi.herokuapp.com/data/weather/${locationCoords}`)
       .then(res => res.json())
@@ -55,9 +55,23 @@ function App() {
   function addToCards(location) {
     let savedLocationsCopy = [...savedLocations, location]
     savedLocationsCopy = [...new Set(savedLocationsCopy)]
-    setSavedLocations(savedLocationsCopy)
-    setWeatherCardsData(savedLocationsCopy.map(location => <WeatherCard key={nanoid()} location={location} />))
+    setSavedLocations([...savedLocationsCopy])
+    setWeatherCardsData(savedLocationsCopy.map(location => <WeatherCard key={nanoid()} location={location} deleteCard={deleteCard}/>))
     localStorage.setItem("locations", JSON.stringify(savedLocationsCopy))
+  }
+
+  function deleteCard(location) {
+    setSavedLocations(prevLocations => {
+      let prevLocationsCopy = prevLocations
+      prevLocationsCopy = prevLocationsCopy.filter(oldLocation => oldLocation !== location)
+      setWeatherCardsData(prevLocationsCopy.length > 0 ?
+        prevLocationsCopy.map(location => <WeatherCard key={nanoid()} location={location} deleteCard={deleteCard}/>) :
+        <p className='Info Info__Cards'>You don't have any saved cards. To save a card, search for a city, then press "Save location to cards"</p>)
+      
+      localStorage.setItem("locations", JSON.stringify(prevLocationsCopy))
+      return prevLocations.filter(oldLocation => oldLocation !== location)
+    })
+
   }
 
   return (
@@ -117,19 +131,16 @@ function App() {
         {weatherData && weatherData.region && 
           <button 
             className='Btn Btn__Save'
-            onClick={() => addToCards(city.city !== "" ? city.city : location)}>
+            onClick={() => addToCards(city.city !== "" ? city.city : myLocation)}>
               Save location to cards
           </button>
         }
       </div>
 
       <h2 className='WeatherCards__Title'>My cards</h2>      
-      <div className='WeatherCards__Container'>
-        {weatherCardsData}
-      </div>
       {savedLocations.length > 0 && 
         <button 
-          className='Btn Btn__Delete'
+          className='Btn Btn__Delete Btn__Delete__AllCards'
           onClick={() => {
             localStorage.removeItem("locations")
             setSavedLocations([])
@@ -138,6 +149,10 @@ function App() {
           Delete all cards
         </button>
       }
+      <div className='WeatherCards__Container'>
+        {weatherCardsData}
+      </div>
+
     </div>
   );
 }
